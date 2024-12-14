@@ -1,0 +1,51 @@
+# Dependencies
+node_modules
+/api/node_modules
+/admin/node_modules
+/web/node_modules
+.pnp
+.pnp.js
+
+# Build outputs
+/api/dist
+/admin/dist
+/web/dist
+/build
+/dist
+/out
+
+# Logs
+/api/logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment Variables
+.env
+.env.*
+*.env
+
+# Editor directories and files
+.idea
+.vscode
+*.swp
+*.swo
+.DS_Store
+*.pem
+
+# Docker volumes
+**/data
+
+# TypeScript
+*.tsbuildinfo
+
+# Cache
+.npm
+.eslintcache
+.stylelintcache
+
+# Misc
+.DS_Store
+Thumbs.db 
