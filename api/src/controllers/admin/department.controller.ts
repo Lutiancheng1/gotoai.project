@@ -8,7 +8,7 @@ import logger from '@/utils/logger';
 export const getDepartments = async (req: Request, res: Response) => {
   try {
     const departments = await DepartmentModel.find()
-      .populate('applications', 'name type isActive')
+      .populate('applications', 'name type isActive apiKey')
       .sort({ path: 1 });
 
     // 构建树形结构
@@ -59,8 +59,12 @@ export const createDepartment = async (req: Request, res: Response) => {
       applications: applications || []
     });
 
+    // 创建后立即获取完整信息
+    const populatedDepartment = await DepartmentModel.findById(department._id)
+      .populate('applications', 'name type isActive apiKey');
+
     logger.info('Department created successfully', { departmentId: department.id });
-    return successResponse(res, { department });
+    return successResponse(res, { department: populatedDepartment });
   } catch (error: any) {
     logger.error('Failed to create department', { error });
     return errorResponse(res, 'Failed to create department', 500, error);
@@ -90,7 +94,7 @@ export const updateDepartment = async (req: Request, res: Response) => {
       id,
       { $set: updateData },
       { new: true }
-    ).populate('applications', 'name type isActive');
+    ).populate('applications', 'name type isActive apiKey');
 
     if (!department) {
       return errorResponse(res, 'Department not found', 404);
@@ -140,7 +144,7 @@ export const getDepartmentDetail = async (req: Request, res: Response) => {
     const { id } = req.params;
 
     const department = await DepartmentModel.findById(id)
-      .populate('applications', 'name type isActive')
+      .populate('applications', 'name type isActive apiKey')
       .populate('parentId', 'name');
 
     if (!department) {

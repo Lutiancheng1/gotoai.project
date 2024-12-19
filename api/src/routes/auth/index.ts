@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import * as authController from '@/controllers/auth/auth.controller';
+import { auth } from '@/middlewares/auth';
 
 const router = Router();
 
@@ -159,5 +160,87 @@ router.post('/web/login', authController.webLogin);
  *               $ref: '#/components/schemas/Error'
  */
 router.post('/logout', authController.logout);
+
+/**
+ * @swagger
+ * /api/auth/profile:
+ *   get:
+ *     summary: 获取当前用户信息
+ *     tags: [Auth]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: 获取成功
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: success
+ *                 data:
+ *                   $ref: '#/components/schemas/User'
+ *       401:
+ *         description: 未认证
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ */
+router.get('/profile', auth, authController.getProfile);
+
+/**
+ * @swagger
+ * /api/auth/profile:
+ *   put:
+ *     summary: 更新个人信息
+ *     tags: [Auth]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               username:
+ *                 type: string
+ *                 description: 新用户名
+ *               currentPassword:
+ *                 type: string
+ *                 description: 当前密码（仅在修改密码时需要）
+ *               newPassword:
+ *                 type: string
+ *                 description: 新密码（可选）
+ *     responses:
+ *       200:
+ *         description: 更新成功
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: success
+ *                 data:
+ *                   $ref: '#/components/schemas/User'
+ *       400:
+ *         description: 请求参数错误
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       401:
+ *         description: 未认证或密码验证失败
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ */
+router.put('/profile', auth, authController.updateProfile);
 
 export default router; 

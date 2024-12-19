@@ -6,7 +6,10 @@ export interface User {
   email: string;
   password: string;
   role: 'admin' | 'user';
-  departments: string[];
+  departments: Array<{
+    _id: string;
+    name: string;
+  }>;
   isActive: boolean;
   canAccessAdmin: boolean;
   canAccessWeb: boolean;
@@ -28,12 +31,9 @@ export interface Application {
   id: string;
   name: string;
   type: 'dify' | 'ragflow' | 'fastgpt';
-  isActive: boolean;
   apiKey: string;
-  config: Record<string, any>;
-  lastUsed: Date | null;
-  requestCount: number;
-  dailyLimit: number;
+  config?: Record<string, any>;
+  isActive: boolean;
   createdAt: Date;
   updatedAt: Date;
 }

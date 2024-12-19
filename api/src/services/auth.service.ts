@@ -18,7 +18,7 @@ export class AuthService {
    */
   public static async login(email: string, password: string, loginType: 'admin' | 'web', req: Request) {
     try {
-      // 查找用户
+      // 查找用户（只在验证时获取密码字段）
       const user = await UserModel.findOne({ email }).select('+password');
       if (!user) {
         await LogService.logLogin({
@@ -111,7 +111,7 @@ export class AuthService {
         req
       });
 
-      // 返回用户信息时排除敏感字段
+      // 返回用户信息（不包含密码字段）
       const userResponse = {
         id: user.id,
         email: user.email,
@@ -120,7 +120,9 @@ export class AuthService {
         departments: user.departments,
         isActive: user.isActive,
         canAccessAdmin: user.canAccessAdmin,
-        canAccessWeb: user.canAccessWeb
+        canAccessWeb: user.canAccessWeb,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt
       };
 
       return {

@@ -120,8 +120,6 @@ const options = {
             config: { type: 'object' },
             isActive: { type: 'boolean' },
             requestCount: { type: 'number' },
-            dailyLimit: { type: 'number' },
-            lastUsed: { type: 'string', format: 'date-time' },
             createdAt: { type: 'string', format: 'date-time' },
             updatedAt: { type: 'string', format: 'date-time' }
           }

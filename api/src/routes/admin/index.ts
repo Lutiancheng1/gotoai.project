@@ -98,6 +98,61 @@ router.get('/users', userController.getUsers);
 
 /**
  * @swagger
+ * /api/admin/users/all:
+ *   get:
+ *     summary: 获取所有用户（无分页）
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: search
+ *         schema:
+ *           type: string
+ *         description: 搜索关键词（用户名或邮箱）
+ *       - in: query
+ *         name: role
+ *         schema:
+ *           type: string
+ *           enum: [admin, user]
+ *         description: 用户角色
+ *       - in: query
+ *         name: isActive
+ *         schema:
+ *           type: boolean
+ *         description: 是否启用
+ *       - in: query
+ *         name: departmentId
+ *         schema:
+ *           type: string
+ *         description: 部门ID
+ *     responses:
+ *       200:
+ *         description: 获取成功
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: success
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     users:
+ *                       type: array
+ *                       items:
+ *                         $ref: '#/components/schemas/User'
+ *       401:
+ *         $ref: '#/components/responses/Unauthorized'
+ *       403:
+ *         $ref: '#/components/responses/Forbidden'
+ */
+router.get('/users/all', userController.getAllUsers);
+
+/**
+ * @swagger
  * /api/admin/users:
  *   post:
  *     summary: 创建新用户
@@ -654,7 +709,7 @@ router.delete('/departments/:id', departmentController.deleteDepartment);
  *         description: 是否启用
  *     responses:
  *       200:
- *         description: 获取成功
+ *         description: 获取成���
  *         content:
  *           application/json:
  *             schema:
@@ -765,11 +820,6 @@ router.get('/applications/:id', applicationController.getApplicationDetail);
  *               config:
  *                 type: object
  *                 description: 应用配置
- *               dailyLimit:
- *                 type: number
- *                 minimum: 1
- *                 default: 1000
- *                 description: 每日请求限制
  *     responses:
  *       200:
  *         description: 创建成功
@@ -832,10 +882,6 @@ router.post('/applications', validate(validationRules.application.createApplicat
  *               isActive:
  *                 type: boolean
  *                 description: 是否启用
- *               dailyLimit:
- *                 type: number
- *                 minimum: 1
- *                 description: 每日请求限制
  *     responses:
  *       200:
  *         description: 更新成功
@@ -896,7 +942,7 @@ router.put('/applications/:id', validate(validationRules.application.updateAppli
  *                       type: string
  *                       example: Application deleted successfully
  *       400:
- *         description: 删除失败（��用正在被部门使用）
+ *         description: 删除失败（应用正在被部门使用）
  *         $ref: '#/components/responses/BadRequest'
  *       401:
  *         $ref: '#/components/responses/Unauthorized'
@@ -906,46 +952,5 @@ router.put('/applications/:id', validate(validationRules.application.updateAppli
  *         $ref: '#/components/responses/NotFound'
  */
 router.delete('/applications/:id', applicationController.deleteApplication);
-
-/**
- * @swagger
- * /api/admin/applications/{id}/reset-count:
- *   post:
- *     summary: 重置应用请求计数
- *     tags: [Applications]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *         description: 应用ID
- *     responses:
- *       200:
- *         description: 重置成功
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 status:
- *                   type: string
- *                   example: success
- *                 data:
- *                   type: object
- *                   properties:
- *                     message:
- *                       type: string
- *                       example: Request count reset successfully
- *       401:
- *         $ref: '#/components/responses/Unauthorized'
- *       403:
- *         $ref: '#/components/responses/Forbidden'
- *       404:
- *         $ref: '#/components/responses/NotFound'
- */
-router.post('/applications/:id/reset-count', applicationController.resetRequestCount);
 
 export default router; 

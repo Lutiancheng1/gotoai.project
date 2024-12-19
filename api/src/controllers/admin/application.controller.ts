@@ -42,12 +42,12 @@ export const getApplications = async (req: Request, res: Response) => {
 // 创建应用
 export const createApplication = async (req: Request, res: Response) => {
   try {
-    const { name, type, apiKey, config, dailyLimit } = req.body;
+    const { name, type, apiKey, config } = req.body;
 
     // 检查应用名称是否已存在
     const existingApp = await ApplicationModel.findOne({ name });
     if (existingApp) {
-      return errorResponse(res, 'Application name already exists', 400);
+      return errorResponse(res, '应用名称已存在', 400);
     }
 
     // 创建应用
@@ -55,8 +55,7 @@ export const createApplication = async (req: Request, res: Response) => {
       name,
       type,
       apiKey,
-      config: config || {},
-      dailyLimit: dailyLimit || 1000,
+      config,
       isActive: true
     });
 
@@ -153,24 +152,3 @@ export const getApplicationDetail = async (req: Request, res: Response) => {
     return errorResponse(res, 'Failed to get application detail', 500, error);
   }
 };
-
-// 重置应用请求计数
-export const resetRequestCount = async (req: Request, res: Response) => {
-  try {
-    const { id } = req.params;
-
-    const application = await ApplicationModel.findById(id);
-    if (!application) {
-      return errorResponse(res, 'Application not found', 404);
-    }
-
-    application.requestCount = 0;
-    await application.save();
-
-    logger.info('Application request count reset successfully', { applicationId: id });
-    return successResponse(res, { message: 'Request count reset successfully' });
-  } catch (error: any) {
-    logger.error('Failed to reset request count', { error });
-    return errorResponse(res, 'Failed to reset request count', 500, error);
-  }
-}; 

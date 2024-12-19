@@ -2,11 +2,12 @@ import { Request, Response } from 'express';
 import { UserModel } from '@/models/user.model';
 import { successResponse, errorResponse } from '@/utils/response';
 import logger from '@/utils/logger';
+import { LogService } from '@/services/log.service';
 
 // 获取用户列表
 export const getUsers = async (req: Request, res: Response) => {
   try {
-    const { page = 1, limit = 10, search, role, isActive } = req.query;
+    const { page = 1, limit = 10, search, role, isActive, departmentId } = req.query;
     
     // 构建查询条件
     const query: any = {};
@@ -18,6 +19,9 @@ export const getUsers = async (req: Request, res: Response) => {
     }
     if (role) query.role = role;
     if (isActive !== undefined) query.isActive = isActive === 'true';
+    if (departmentId) {
+      query.departments = departmentId;
+    }
 
     // 执行查询
     const total = await UserModel.countDocuments(query);
@@ -48,9 +52,15 @@ export const createUser = async (req: Request, res: Response) => {
     const { email, password, username, role, departments, canAccessAdmin, canAccessWeb } = req.body;
 
     // 检查邮箱是否已存在
-    const existingUser = await UserModel.findOne({ email });
-    if (existingUser) {
-      return errorResponse(res, 'Email already exists', 400);
+    const existingEmail = await UserModel.findOne({ email });
+    if (existingEmail) {
+      return errorResponse(res, '该邮箱已被注册', 400);
+    }
+
+    // 检查用户名是否已存在
+    const existingUsername = await UserModel.findOne({ username });
+    if (existingUsername) {
+      return errorResponse(res, '该用户名已被使用', 400);
     }
 
     // 创建用户
@@ -83,6 +93,17 @@ export const updateUser = async (req: Request, res: Response) => {
     delete updateData.password;
     delete updateData.email;
 
+    // 如果要更新用户名，检查是否已存在
+    if (updateData.username) {
+      const existingUsername = await UserModel.findOne({
+        username: updateData.username,
+        _id: { $ne: id } // 排除当前用户
+      });
+      if (existingUsername) {
+        return errorResponse(res, '该用户名已被使用', 400);
+      }
+    }
+
     const user = await UserModel.findByIdAndUpdate(
       id,
       { $set: updateData },
@@ -105,29 +126,60 @@ export const updateUser = async (req: Request, res: Response) => {
 export const deleteUser = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
+    const currentUser = req.user;
 
-    // 防止删除最后一个管理员
-    if (req.user?.userId === id) {
-      return errorResponse(res, 'Cannot delete yourself', 400);
+    // 检查当前用户权限
+    if (!currentUser || currentUser.role !== 'admin') {
+      return errorResponse(res, '只有管理员可以删除用户', 403);
     }
 
-    const adminCount = await UserModel.countDocuments({ role: 'admin' });
+    // 不能删除自己
+    if (id === currentUser.userId) {
+      return errorResponse(res, '不能删除当前登录用户', 400);
+    }
+
+    // 获取要删除的用户
     const userToDelete = await UserModel.findById(id);
+    if (!userToDelete) {
+      return errorResponse(res, '用户不存在', 404);
+    }
+
+    // 如果要删除的是管理员，检查是否是最后一个管理员
+    if (userToDelete.role === 'admin') {
+      const adminCount = await UserModel.countDocuments({ role: 'admin' });
+      if (adminCount <= 1) {
+        return errorResponse(res, '系统中必须保留至少一个管理员', 400);
+      }
+    }
+
+    // 执行删除操作
+    await UserModel.findByIdAndDelete(id);
+    // 获取当前用户的完整信息
+    const currentUserInfo = await UserModel.findById(currentUser.userId);
     
-    if (userToDelete?.role === 'admin' && adminCount <= 1) {
-      return errorResponse(res, 'Cannot delete the last admin', 400);
-    }
+    // 记录操作日志
+    await LogService.logOperation({
+      userId: currentUser.userId,
+      username: currentUserInfo.username,
+      module: 'user',
+      action: 'delete',
+      description: `Deleted user ${userToDelete.username}`,
+      req
+    });
 
-    const user = await UserModel.findByIdAndDelete(id);
-    if (!user) {
-      return errorResponse(res, 'User not found', 404);
-    }
+    logger.info('User deleted successfully', { 
+      deletedUserId: id,
+      deletedBy: currentUser.userId 
+    });
 
-    logger.info('User deleted successfully', { userId: id });
-    return successResponse(res, { message: 'User deleted successfully' });
+    return successResponse(res, { message: '用户删除成功' });
   } catch (error: any) {
-    logger.error('Failed to delete user', { error });
-    return errorResponse(res, 'Failed to delete user', 500, error);
+    logger.error('Delete user failed', { error });
+    return errorResponse(
+      res,
+      error.message || '删除用户失败',
+      error.statusCode || 500
+    );
   }
 };
 
@@ -154,5 +206,36 @@ export const updatePassword = async (req: Request, res: Response) => {
   } catch (error: any) {
     logger.error('Failed to update password', { error });
     return errorResponse(res, 'Failed to update password', 500, error);
+  }
+};
+
+// 获取所有用户（无分页）
+export const getAllUsers = async (req: Request, res: Response) => {
+  try {
+    const { search, role, isActive, departmentId } = req.query;
+    
+    // 构建查询条件
+    const query: any = {};
+    if (search) {
+      query.$or = [
+        { username: new RegExp(String(search), 'i') },
+        { email: new RegExp(String(search), 'i') }
+      ];
+    }
+    if (role) query.role = role;
+    if (isActive !== undefined) query.isActive = isActive === 'true';
+    if (departmentId) {
+      query.departments = departmentId;
+    }
+
+    // 执行查询
+    const users = await UserModel.find(query)
+      .populate('departments', 'name')
+      .sort({ createdAt: -1 });
+
+    return successResponse(res, { users });
+  } catch (error: any) {
+    logger.error('Failed to get all users', { error });
+    return errorResponse(res, 'Failed to get all users', 500, error);
   }
 }; 

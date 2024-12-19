@@ -20,7 +20,7 @@ const userSchema = new Schema<IUserDocument>({
     unique: true,
     trim: true,
     lowercase: true,
-    match: [/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/, 'Please enter a valid email']
+    match: [/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, 'Please enter a valid email']
   },
   password: {
     type: String,
@@ -52,6 +52,13 @@ const userSchema = new Schema<IUserDocument>({
   timestamps: true,
   toJSON: {
     transform: (doc, ret) => {
+      ret._id = ret._id.toString();
+      if (ret.departments) {
+        ret.departments = ret.departments.map((dept: any) => ({
+          _id: dept._id.toString(),
+          name: dept.name
+        }));
+      }
       delete ret.password;
       return ret;
     }

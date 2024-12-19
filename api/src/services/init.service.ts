@@ -30,12 +30,16 @@ export class InitService {
       }
 
       // 创建默认管理员账户
-      const hashedPassword = await bcrypt.hash(process.env.ADMIN_PASSWORD!, 10);
+      logger.info('Creating default admin account', {
+        email: process.env.ADMIN_EMAIL,
+        username: process.env.ADMIN_USERNAME,
+        password_plain: process.env.ADMIN_PASSWORD,
+      });
       
       const adminUser = await UserModel.create({
         email: process.env.ADMIN_EMAIL,
         username: process.env.ADMIN_USERNAME,
-        password: hashedPassword,
+        password: process.env.ADMIN_PASSWORD,
         role: 'admin',
         departments: [],
         isActive: true,

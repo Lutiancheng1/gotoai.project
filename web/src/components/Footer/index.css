@@ -1,0 +1,19 @@
+.policy-wrap {
+  padding-top: 12px;
+  text-align: center;
+}
+
+.policy-wrap a,
+.policy-wrap span {
+  font-family: PingFang SC;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 12px;
+  color: #b0b7c0;
+  text-decoration: none;
+}
+
+.policy-wrap .link:hover {
+  text-decoration-line: underline;
+}

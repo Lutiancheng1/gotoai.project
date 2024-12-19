@@ -26,12 +26,10 @@ const departmentSchema = new Schema<IDepartmentDocument>({
   },
   path: {
     type: String,
-    required: true,
     index: true
   },
   level: {
     type: Number,
-    required: true,
     min: 1
   },
   applications: [{

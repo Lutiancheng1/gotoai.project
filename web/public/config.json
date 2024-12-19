@@ -1,0 +1,45 @@
+{
+  "logo": "https://resource.gotoai.world/upload/system/static/logo/oneask/logo_white.png",
+  "loginLogo": "https://resource.gotoai.world/upload/system/static/logo/oneask/logo.png",
+  "title": "GotoAI-企业一站式AI应用平台",
+  "loginTitle": "GotoAI 知识库",
+  "version": "2.1.0",
+  "copyright": "©2020 深圳市云展信息技术有限公司 粤ICP备15077337号 热线：400-862-1600",
+  "links": [
+    {
+      "url": "https://www.gotoai.world",
+      "title": "GotoAI 中国技术社区"
+    },
+    {
+      "url": "https://oneask.gotoai.world",
+      "title": "GotoAI 产品体验中心"
+    },
+    {
+      "url": "https://academy.gotoai.world",
+      "title": "GotoAI 网络学院"
+    },
+    {
+      "url": "https://lab.gotoai.world",
+      "title": "GotoAI Lab 创新实验室"
+    },
+    {
+      "url": "https://bs.gotoai.world",
+      "title": "GotoAI 商学院"
+    },
+    {
+      "url": "https://startups.gotoai.world",
+      "title": "GotoAI 创业加速器"
+    },
+    {
+      "url": "https://www.gotoai.world/h-col-126.html",
+      "title": "关于我们"
+    },
+    {
+      "url": "https://job.gotoai.world",
+      "title": "GotoAI 精英职通车"
+    }
+  ],
+  "disabledMenus": [],
+  "feedback": "feedback@gotoai.world",
+  "aboutUs": "https://www.gotoai.world/h-col-126.html"
+}

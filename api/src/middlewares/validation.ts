@@ -92,7 +92,7 @@ export const validationRules = {
       email: {
         required: true,
         type: 'string',
-        pattern: /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/
+        pattern: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
       },
       password: {
         required: true,
@@ -175,10 +175,6 @@ export const validationRules = {
         required: true,
         type: 'string',
         min: 10
-      },
-      dailyLimit: {
-        type: 'number',
-        min: 1
       }
     },
     updateApplication: {
@@ -193,10 +189,6 @@ export const validationRules = {
       },
       isActive: {
         type: 'boolean'
-      },
-      dailyLimit: {
-        type: 'number',
-        min: 1
       }
     }
   }
