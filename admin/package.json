@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "build:package": "chmod +x ./scripts/package.sh && ./scripts/package.sh",
     "lint": "eslint .",
     "preview": "vite preview"
   },

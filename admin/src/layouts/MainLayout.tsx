@@ -48,15 +48,15 @@ const MainLayout: React.FC = () => {
   ]
 
   const handleMenuClick = ({ key }: { key: string }) => {
-    navigate(key)
+    navigate('/admin' + key)
   }
 
   const handleLogout = async () => {
     try {
       await dispatch(logout()).unwrap()
-      navigate('/login', { replace: true })
+      navigate('/admin/login', { replace: true })
     } catch (error) {
-      navigate('/login', { replace: true })
+      navigate('/admin/login', { replace: true })
     }
   }
 
@@ -65,7 +65,7 @@ const MainLayout: React.FC = () => {
       key: 'profile',
       icon: <UserOutlined />,
       label: '个人信息',
-      onClick: () => navigate('/profile')
+      onClick: () => navigate('/admin/profile')
     },
     {
       key: 'logout',
@@ -84,7 +84,7 @@ const MainLayout: React.FC = () => {
         <div className="h-8 m-4 bg-white/10 flex justify-center items-center">
           <span className="text-white">后台管理系统</span>
         </div>
-        <Menu theme="dark" mode="inline" selectedKeys={[location.pathname]} items={menuItems} onClick={handleMenuClick} />
+        <Menu theme="dark" mode="inline" selectedKeys={[location.pathname.replace('/admin', '')]} items={menuItems} onClick={handleMenuClick} />
       </Sider>
       <Layout>
         <Header className="bg-white px-4 flex justify-between items-center">

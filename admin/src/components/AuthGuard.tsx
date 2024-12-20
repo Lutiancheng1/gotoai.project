@@ -22,13 +22,13 @@ const AuthGuard: React.FC<AuthGuardProps> = ({ children }) => {
     }
 
     // 如果是登录页面，不需要进行验证
-    if (location.pathname === '/login') {
+    if (location.pathname === '/admin/login') {
       return
     }
 
     // 如果没有token或用户信息，重定向到登录页面
     if (!token || !user) {
-      navigate('/login', {
+      navigate('/admin/login', {
         replace: true,
         state: { from: location.pathname }
       })
@@ -36,13 +36,13 @@ const AuthGuard: React.FC<AuthGuardProps> = ({ children }) => {
   }, [token, user, location.pathname, navigate, dispatch])
 
   // 如果是登录页面且已经登录，重定向到首页
-  if (location.pathname === '/login' && token && user) {
-    navigate('/', { replace: true })
+  if (location.pathname === '/admin/login' && token && user) {
+    navigate('/admin/', { replace: true })
     return null
   }
 
   // 如果不是登录页面且未登录，返回 null
-  if (location.pathname !== '/login' && (!token || !user)) {
+  if (location.pathname !== '/admin/login' && (!token || !user)) {
     return null
   }
 

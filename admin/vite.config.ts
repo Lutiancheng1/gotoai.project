@@ -4,6 +4,11 @@ import path from 'path'
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  base: '/admin/',
+  publicDir: 'public',
+  build: {
+    outDir: 'dist'
+  },
   plugins: [react()],
   resolve: {
     alias: {

@@ -21,9 +21,9 @@ function App() {
       <ConfigProvider locale={zhCN}>
         <Router>
           <Routes>
-            <Route path="/login" element={<Login />} />
+            <Route path="/admin/login" element={<Login />} />
             <Route
-              path="/"
+              path="/admin/"
               element={
                 <AuthGuard>
                   <MainLayout />
@@ -38,7 +38,7 @@ function App() {
               <Route path="settings" element={<div>Settings</div>} />
               <Route path="profile" element={<Profile />} />
             </Route>
-            <Route path="*" element={<Navigate to="/" replace />} />
+            <Route path="*" element={<Navigate to="/admin/" replace />} />
           </Routes>
         </Router>
       </ConfigProvider>

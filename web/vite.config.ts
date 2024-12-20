@@ -7,6 +7,11 @@ import daisyui from 'daisyui'
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  base: '/',
+  publicDir: 'public',
+  build: {
+    outDir: 'dist'
+  },
   plugins: [react()],
   resolve: {
     alias: {

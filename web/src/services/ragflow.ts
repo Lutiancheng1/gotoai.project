@@ -10,8 +10,10 @@ import type {
 } from '@/types/ragflow';
 import { stringify } from 'qs';
 
-//  test1 ragflow-NjMzkyZmVjYmRkMzExZWZiN2E3MDI0Mm
-export const baseUrl = 'http://20.2.240.253'
+// 根据环境变量判断使用哪个 baseUrl
+export const baseUrl = import.meta.env.MODE === 'development' 
+  ? 'http://20.2.240.253'  // 开发环境
+  : '/rag'                 // 生产环境
 
 // 创建ragflow专用的axios实例
 const ragflowAxios = axios.create({
