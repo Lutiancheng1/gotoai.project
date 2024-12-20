@@ -37,8 +37,7 @@ const requiredEnvVars = [
   'ADMIN_USERNAME',
   
   // API配置
-  'NODE_ENV',
-  'ALLOWED_ORIGINS'
+  'NODE_ENV'
 ];
 
 for (const envVar of requiredEnvVars) {
@@ -55,7 +54,9 @@ const port = process.env.API_PORT || 3000;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({
-  origin: process.env.ALLOWED_ORIGINS?.split(',') || '*',
+  origin: '*',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true
 }));
 

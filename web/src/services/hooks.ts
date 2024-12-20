@@ -23,10 +23,31 @@ export interface ResponsePostType<T = any> {
   [key: string]: unknown;
 }
 
+export interface IReference {
+  chunks: IChunk[];
+  doc_aggs: Docagg[];
+  total: number;
+}
+export interface IChunk {
+  available_int: number; // Whether to enable, 0: not enabled, 1: enabled
+  chunk_id: string;
+  content_with_weight: string;
+  doc_id: string;
+  doc_name: string;
+  img_id: string;
+  important_kwd: any[];
+  positions: number[][];
+}
+
+export interface Docagg {
+  count: number;
+  doc_id: string;
+  doc_name: string;
+}
 
 export interface IAnswer {
   answer: string;
-  reference: Reference;
+  reference: IReference;
   conversationId?: string;
   prompt?: string;
   id?: string;
@@ -41,7 +62,7 @@ export const useSendMessageWithSse = (
   const [answer, setAnswer] = useState<IAnswer>({} as IAnswer);
   const [done, setDone] = useState(true);
   const timer = useRef<any>();
-
+  const ragflowToken = `Bearer ${useRagflowToken()}`
   const resetAnswer = useCallback(() => {
     if (timer.current) {
       clearTimeout(timer.current);
@@ -62,7 +83,7 @@ export const useSendMessageWithSse = (
         const response = await fetch(url, {
           method: 'POST',
           headers: {
-            Authorization: useRagflowToken() || '',
+            Authorization: ragflowToken || '',
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({

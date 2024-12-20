@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node dist/app.js",
     "dev": "nodemon",
-    "build": "tsc",
+    "build": "tsc && tsc-alias",
     "lint": "eslint . --ext .ts",
     "format": "prettier --write \"src/**/*.ts\"",
     "setup": "cp .env.dev.example .env.development",
@@ -14,12 +14,14 @@
     "docker:dev": "docker-compose --env-file .env.development -p ai-chat-dev -f docker/docker-compose.dev.yml up --build",
     "docker:dev:clean": "docker-compose --env-file .env.development -p ai-chat-dev -f docker/docker-compose.dev.yml down -v && docker-compose --env-file .env.development -p ai-chat-dev -f docker/docker-compose.dev.yml up --build",
     "docker:prod": "docker-compose --env-file .env.production -p ai-chat-prod -f docker/docker-compose.prod.yml up --build -d",
-    "docker:prod:clean": "docker-compose --env-file .env.production -f docker/docker-compose.prod.yml down -v && docker-compose --env-file .env.production -f docker/docker-compose.prod.yml up --build -d",
+    "docker:prod:clean": "docker-compose --env-file .env.production -f docker/docker-compose.prod.yml down -v && docker-compose --env-file .env.production -p ai-chat-prod -f docker/docker-compose.prod.yml up --build -d",
     "docker:stop": "docker-compose --env-file .env.development -f docker/docker-compose.dev.yml down",
     "docker:stop:prod": "docker-compose --env-file .env.production -f docker/docker-compose.prod.yml down",
     "docker:logs": "docker-compose --env-file .env.development -f docker/docker-compose.dev.yml logs -f",
     "docker:logs:prod": "docker-compose --env-file .env.production -f docker/docker-compose.prod.yml logs -f",
-    "deploy": "bash scripts/deploy.sh"
+    "deploy": "bash scripts/deploy.sh",
+    "backup:prod": "bash scripts/backup.sh",
+    "restore:prod": "bash scripts/restore.sh"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
@@ -47,6 +49,7 @@
     "nodemon": "^3.0.1",
     "prettier": "^3.0.3",
     "ts-node": "^10.9.1",
+    "tsc-alias": "^1.8.8",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.2.2"
   }

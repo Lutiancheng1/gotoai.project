@@ -20,7 +20,7 @@ import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { RagflowService } from '@/services/ragflow'
 import type { Message, Reference, Session } from '@/types/ragflow'
 import { toggleLoading } from '@/store/slice/authSlice'
-import { useSendMessageWithSse } from '@/services/hooks'
+import { IReference, useSendMessageWithSse } from '@/services/hooks'
 
 type Props = {}
 
@@ -32,6 +32,24 @@ interface FileInfo {
   type: string
   loading?: boolean
   error?: boolean
+}
+
+// 添加转换函数
+const convertIReferenceToReferences = (iReference: IReference): Reference[] => {
+  if (!iReference?.chunks) return []
+
+  return iReference.chunks.map((chunk: any) => ({
+    content: chunk.content || '',
+    dataset_id: chunk.dataset_id || '',
+    document_id: chunk.document_id || '',
+    document_name: chunk.document_name || '',
+    id: chunk.id || '',
+    image_id: chunk.image_id || '',
+    positions: chunk.positions || [],
+    similarity: chunk.similarity || 0,
+    term_similarity: chunk.term_similarity || 0,
+    vector_similarity: chunk.vector_similarity || 0
+  }))
 }
 
 const KnowledgeData: React.FC<Props> = () => {
@@ -208,8 +226,8 @@ const KnowledgeData: React.FC<Props> = () => {
           messages[messages.length - 1] = {
             ...lastMessage,
             content: answer.answer + (done ? '' : '<span class="gpt-cursor"></span>'),
-            id: answer.id
-            // reference: answer.reference || []
+            id: answer.id,
+            reference: convertIReferenceToReferences(answer.reference)
           }
         }
 

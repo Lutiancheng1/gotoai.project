@@ -12,7 +12,7 @@ COPY package*.json ./
 # 安装所有依赖
 RUN npm ci
 
-# 复制源代码
+# 复制源代码和配置文件
 COPY . .
 
 # 构建应用
@@ -28,10 +28,12 @@ WORKDIR /app
 
 # 复制 package.json 和 package-lock.json
 COPY package*.json ./
+COPY tsconfig.json ./
 
 # 只安装生产依赖
 RUN npm ci --only=production && \
-    npm cache clean --force
+    npm cache clean --force && \
+    npm install module-alias tsconfig-paths
 
 # 从构建阶段复制编译后的代码
 COPY --from=builder /app/dist ./dist
@@ -45,13 +47,15 @@ USER node
 
 # 设置环境变量
 ENV NODE_ENV=production
+ENV TS_NODE_BASEURL=/app/dist
+ENV NODE_PATH=/app/dist
 
 # 健康检查
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD wget --no-verbose --tries=1 --spider http://localhost:${API_PORT:-3000}/api/health || exit 1
+    CMD wget --no-verbose --tries=1 --spider http://localhost:${API_PORT:-3333}/api/health || exit 1
 
 # 使用 tini 作为入口点
 ENTRYPOINT ["/sbin/tini", "--"]
 
-# 启动应用
-CMD ["npm", "start"] 
+# 启动应用并输出详细日志
+CMD ["sh", "-c", "echo 'Starting application...' && printenv > /app/logs/env.log && echo 'Environment variables saved.' && ls -la /app/dist && echo 'Starting node...' && node -r module-alias/register -r tsconfig-paths/register dist/app.js 2>&1 | tee -a /app/logs/app.log"]

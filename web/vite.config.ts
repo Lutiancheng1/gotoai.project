@@ -29,6 +29,12 @@ export default defineConfig({
         tailwindcss({
           content: ['./src/**/*.{js,jsx,ts,tsx}'],
           plugins: [daisyui],
+          daisyui: {
+            themes: ["light"],
+            darkTheme: "light",
+            logs: false,
+            darkMode: false
+          }
         }),
         autoprefixer
       ]

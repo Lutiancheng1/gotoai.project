@@ -31,7 +31,7 @@ echo -e "${GREEN}构建并启动生产环境容器...${NC}"
 docker compose --env-file ../.env.production -p ai-chat-prod -f docker-compose.prod.yml up -d --build
 
 echo -e "${GREEN}生产环境部署完成！${NC}"
-echo -e "${GREEN}API服务运行在: http://localhost:3000${NC}"
+echo -e "${GREEN}API服务运行在: http://localhost:3333${NC}"
 echo -e "${YELLOW}请确保：${NC}"
 echo -e "${YELLOW}1. 已正确配置所有环境变量${NC}"
 echo -e "${YELLOW}2. 已配置反向代理（如Nginx）${NC}"

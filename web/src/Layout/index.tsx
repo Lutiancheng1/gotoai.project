@@ -124,7 +124,7 @@ const Index = ({}: Props) => {
                           <div className="head-info">
                             <div className="head-name">
                               <p className="dot name">
-                                用户_{user?.username} ({user?.departments?.map((item) => item.name).join(',')})
+                                用户_{user?.username} {user?.departments && user?.departments?.length > 0 ? `(${user?.departments?.map((item) => item.name).join(',')})` : ''}
                               </p>
                               <div className="icon-box">
                                 {/* <div className="edit" /> */}

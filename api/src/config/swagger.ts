@@ -1,6 +1,7 @@
 import { Express } from 'express';
 import swaggerJsdoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
+import path from 'path';
 
 const options = {
   definition: {
@@ -175,7 +176,12 @@ const options = {
       }
     }
   },
-  apis: ['./src/routes/**/*.ts'], // 路由文件的位置
+  apis: [
+    // 根据环境选择正确的路由文件路径
+    process.env.NODE_ENV === 'production'
+      ? path.join(__dirname, '../routes/**/*.js')  // 生产环境使用编译后的 JS 文件
+      : path.join(__dirname, '../routes/**/*.ts')  // 开发环境使用 TS 文件
+  ]
 };
 
 const specs = swaggerJsdoc(options);
@@ -184,7 +190,10 @@ export const setupSwagger = (app: Express) => {
   // Swagger UI 配置
   const swaggerUiOptions = {
     customCss: '.swagger-ui .topbar { display: none }',
-    customSiteTitle: 'AI Knowledge Base Chat System API Documentation'
+    customSiteTitle: 'AI Knowledge Base Chat System API Documentation',
+    swaggerOptions: {
+      persistAuthorization: true
+    }
   };
 
   app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs, swaggerUiOptions));

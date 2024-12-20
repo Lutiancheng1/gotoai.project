@@ -80,7 +80,7 @@ const ApplicationFormModal: React.FC<ApplicationFormModalProps> = ({ visible, ed
           </Select>
         </Form.Item>
 
-        <Form.Item name="apiKey" label="API Key" rules={[{ required: true, message: '请输入 API Key' }]}>
+        <Form.Item name="apiKey" label="API Key" rules={[{ required: true, message: '请输入 API Key', min: 10 }]}>
           <Input.Password placeholder="请输入 API Key (助理id)" />
         </Form.Item>
 

@@ -103,7 +103,7 @@ const Login: React.FC = () => {
                 <img src={logo} className="w-full h-full" alt="Logo" />
               </div>
               <h2 className={`${styles.formTitle} text-lg text-slate-500 mb-0`}>{siteConfig?.loginTitle}</h2>
-              <p className="text-slate-500 mb-3">{siteConfig?.version}</p>
+              <p className="text-slate-500 mb-3">Version: {siteConfig?.version}</p>
 
               <Form.Item<FieldType> labelAlign="left" name="username" rules={[{ required: true, message: '请输入邮箱!', type: 'email' }]} validateStatus={error ? 'error' : ''}>
                 <Input style={{ padding: '10px' }} prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Email" />

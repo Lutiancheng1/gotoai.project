@@ -61,7 +61,7 @@
 }
 
 .new-session-button :hover {
-  background: linear-gradient(0deg, rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0.08)), #2454ff;
+  background: linear-gradient(0deg, rgba(0, 0, 0, .08), rgba(0, 0, 0, .08)), #2454ff;
   border-radius: 8px;
 }
 
@@ -144,7 +144,7 @@
 .history-list .history-item:hover {
   background-color: #f8f8f8;
   color: #3e6ffb;
-  box-shadow: 0 0 6px 0 rgba(113, 127, 167, 0.28);
+  box-shadow: 0 0 6px 0 rgba(113, 127, 167, .28);
 }
 
 .history-list .history-item:hover .time i {
@@ -152,7 +152,7 @@
 }
 
 .history-item:hover::before {
-  content: '';
+  content: "";
   position: absolute;
   height: 75px;
   width: 2px;
@@ -164,7 +164,7 @@
 .history-item.active {
   color: #3e6ffb;
   background-color: #f8f8f8;
-  box-shadow: 0 0 6px 0 rgba(113, 127, 167, 0.28);
+  box-shadow: 0 0 6px 0 rgba(113, 127, 167, .28);
 }
 
 .history-item.active .time i {
@@ -172,7 +172,7 @@
 }
 
 .history-item.active::before {
-  content: '';
+  content: "";
   position: absolute;
   height: 75px;
   width: 2px;
@@ -192,7 +192,7 @@
   background-color: #f6f7f9;
 }
 
-.expand-bar > div {
+.expand-bar>div {
   width: 40px;
   height: 40px;
   background-repeat: no-repeat;
@@ -200,7 +200,7 @@
   position: absolute;
   left: 16px;
   border-radius: 12px;
-  box-shadow: 0 0 2.857px 0 rgba(0, 0, 0, 0.08);
+  box-shadow: 0 0 2.857px 0 rgba(0, 0, 0, .08);
   cursor: pointer;
 }
 
@@ -226,7 +226,7 @@
   top: 136px;
 
   &:hover {
-    > i {
+    >i {
       color: #fff;
     }
   }
