@@ -11,17 +11,22 @@ import Users from '@/pages/Users'
 import Departments from '@/pages/Departments'
 import Applications from '@/pages/Applications'
 import Dashboard from '@/pages/Dashboard'
+import AutoLogin from '@/pages/AutoLogin'
+import AutoLoginGenerator from '@/pages/AutoLoginGenerator'
 
 // 导入axios配置
 import '@/utils/axios'
 
 function App() {
+  const isDevelopment = import.meta.env.MODE === 'development'
+
   return (
     <Provider store={store}>
       <ConfigProvider locale={zhCN}>
         <Router>
           <Routes>
             <Route path="/admin/login" element={<Login />} />
+            <Route path="/admin/auto-login" element={<AutoLogin />} />
             <Route
               path="/admin/"
               element={
@@ -30,13 +35,15 @@ function App() {
                 </AuthGuard>
               }
             >
-              {/* 在这里添加子路由 */}
-              <Route index element={<Dashboard />} />
+              {/* 根路径重定向 */}
+              <Route index element={isDevelopment ? <Dashboard /> : <Navigate to="/admin/users" replace />} />
               <Route path="users" element={<Users />} />
               <Route path="departments" element={<Departments />} />
               <Route path="applications" element={<Applications />} />
-              <Route path="settings" element={<div>Settings</div>} />
               <Route path="profile" element={<Profile />} />
+              <Route path="settings">
+                <Route path="auto-login-generator" element={<AutoLoginGenerator />} />
+              </Route>
             </Route>
             <Route path="*" element={<Navigate to="/admin/" replace />} />
           </Routes>

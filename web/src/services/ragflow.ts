@@ -12,7 +12,7 @@ import { stringify } from 'qs';
 
 // 根据环境变量判断使用哪个 baseUrl
 export const baseUrl = import.meta.env.MODE === 'development' 
-  ? 'http://20.2.240.253'  // 开发环境
+  ? 'http://4.236.163.139'  // 开发环境
   : '/rag'                 // 生产环境
 
 // 创建ragflow专用的axios实例

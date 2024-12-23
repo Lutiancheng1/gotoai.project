@@ -19,6 +19,7 @@ export default defineConfig({
     proxy: {
       '/api': {
         target: 'http://localhost:3000',
+        // target: 'http://47.120.27.98:3333',
         changeOrigin: true,
         secure: false,
       }

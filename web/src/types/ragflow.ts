@@ -8,9 +8,9 @@ export interface Reference {
   id: string;
   image_id: string;
   positions: number[];
-  similarity: number;
-  term_similarity: number;
-  vector_similarity: number;
+  // similarity: number;
+  // term_similarity: number;
+  // vector_similarity: number;
 }
 
 export interface Message {

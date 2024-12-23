@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
 import { Layout, Menu, Button, theme, Dropdown, Popconfirm, Avatar } from 'antd'
-import { MenuFoldOutlined, MenuUnfoldOutlined, UserOutlined, LogoutOutlined, DashboardOutlined, TeamOutlined, SettingOutlined, ApartmentOutlined, AppstoreOutlined } from '@ant-design/icons'
+import { MenuFoldOutlined, MenuUnfoldOutlined, UserOutlined, LogoutOutlined, DashboardOutlined, TeamOutlined, SettingOutlined, ApartmentOutlined, AppstoreOutlined, LinkOutlined } from '@ant-design/icons'
 import { useNavigate, useLocation, Outlet } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '@/store'
 import { logout } from '@/store/slices/auth.slice'
 import type { RootState } from '@/store'
+import { MenuItemType } from 'antd/es/menu/interface'
 
 const { Header, Sider, Content } = Layout
 
@@ -14,17 +15,24 @@ const MainLayout: React.FC = () => {
   const location = useLocation()
   const dispatch = useAppDispatch()
   const { user } = useAppSelector((state: RootState) => state.auth)
+  const isDevelopment = import.meta.env.MODE === 'development'
 
   const {
     token: { colorBgContainer }
   } = theme.useToken()
 
-  const menuItems = [
-    {
-      key: '/',
-      icon: <DashboardOutlined />,
-      label: '仪表盘'
-    },
+  // 基础菜单项
+  const baseMenuItems: MenuItemType[] = [
+    // 仅在开发环境显示仪表盘
+    ...(isDevelopment
+      ? [
+          {
+            key: '/',
+            icon: <DashboardOutlined />,
+            label: '仪表盘'
+          }
+        ]
+      : []),
     {
       key: '/users',
       icon: <TeamOutlined />,
@@ -40,12 +48,30 @@ const MainLayout: React.FC = () => {
       icon: <AppstoreOutlined />,
       label: '应用管理'
     }
-    // {
-    //   key: '/settings',
-    //   icon: <SettingOutlined />,
-    //   label: '系统设置'
-    // }
   ]
+
+  // 系统设置子菜单
+  const settingsChildren: MenuItemType[] = []
+
+  // 只在开发环境显示自动登录菜单
+  if (isDevelopment) {
+    settingsChildren.push({
+      key: '/settings/auto-login-generator',
+      icon: <LinkOutlined />,
+      label: '自动登录'
+    })
+  }
+
+  // 如果系统设置有子菜单，则添加系统设置
+  const menuItems = [...baseMenuItems]
+  if (settingsChildren.length > 0) {
+    menuItems.push({
+      key: '/settings',
+      icon: <SettingOutlined />,
+      label: '系统设置',
+      children: settingsChildren
+    } as MenuItemType)
+  }
 
   const handleMenuClick = ({ key }: { key: string }) => {
     navigate('/admin' + key)
@@ -80,23 +106,35 @@ const MainLayout: React.FC = () => {
 
   return (
     <Layout className="min-h-screen">
-      <Sider trigger={null} collapsible collapsed={collapsed}>
-        <div className="h-8 m-4 bg-white/10 flex justify-center items-center">
-          <span className="text-white">后台管理系统</span>
-        </div>
-        <Menu theme="dark" mode="inline" selectedKeys={[location.pathname.replace('/admin', '')]} items={menuItems} onClick={handleMenuClick} />
+      <Sider trigger={null} collapsible collapsed={collapsed} className="bg-white border-r border-gray-200">
+        {/* 只在开发环境显示Logo */}
+        {isDevelopment && (
+          <div className="h-8 m-4 bg-gray-100 flex justify-center items-center">
+            <span className="text-gray-800 font-medium">后台管理系统</span>
+          </div>
+        )}
+        <Menu
+          mode="inline"
+          selectedKeys={[location.pathname.replace('/admin', '')]}
+          items={menuItems}
+          onClick={handleMenuClick}
+          className="border-r-0" // 移除右侧边框
+        />
       </Sider>
       <Layout>
-        <Header className="bg-white px-4 flex justify-between items-center">
-          <Button type="text" icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />} onClick={() => setCollapsed(!collapsed)} />
-          <Dropdown menu={{ items: userMenu }} placement="bottomRight">
-            <div className="flex items-center cursor-pointer">
-              <Avatar icon={<UserOutlined />} />
-              <span className="ml-2">{user?.username}</span>
-            </div>
-          </Dropdown>
-        </Header>
-        <Content className="m-6 p-6 bg-white">
+        {/* 只在开发环境显示Header */}
+        {isDevelopment && (
+          <Header className="bg-white px-4 flex justify-between items-center border-b border-gray-200">
+            <Button type="text" icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />} onClick={() => setCollapsed(!collapsed)} />
+            <Dropdown menu={{ items: userMenu }} placement="bottomRight">
+              <div className="flex items-center cursor-pointer">
+                <Avatar icon={<UserOutlined />} />
+                <span className="ml-2">{user?.username}</span>
+              </div>
+            </Dropdown>
+          </Header>
+        )}
+        <Content className={`bg-white overflow-hidden ${isDevelopment ? 'm-6 p-6 h-[calc(100vh-112px)]' : 'h-screen'}`}>
           <Outlet />
         </Content>
       </Layout>

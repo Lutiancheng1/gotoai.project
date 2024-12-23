@@ -21,6 +21,7 @@ import { RagflowService } from '@/services/ragflow'
 import type { Message, Reference, Session } from '@/types/ragflow'
 import { toggleLoading } from '@/store/slice/authSlice'
 import { IReference, useSendMessageWithSse } from '@/services/hooks'
+import ReferenceText from '@/components/ReferenceText'
 
 type Props = {}
 
@@ -45,10 +46,7 @@ const convertIReferenceToReferences = (iReference: IReference): Reference[] => {
     document_name: chunk.document_name || '',
     id: chunk.id || '',
     image_id: chunk.image_id || '',
-    positions: chunk.positions || [],
-    similarity: chunk.similarity || 0,
-    term_similarity: chunk.term_similarity || 0,
-    vector_similarity: chunk.vector_similarity || 0
+    positions: chunk.positions || []
   }))
 }
 
@@ -464,16 +462,6 @@ const KnowledgeData: React.FC<Props> = () => {
     }
   }
 
-  // 添加引用信息弹窗状态
-  const [referenceModalVisible, setReferenceModalVisible] = useState(false)
-  const [currentReference, setCurrentReference] = useState<Reference[]>([])
-
-  // 显示引用信息弹窗
-  const showReferenceModal = (references: Reference[]) => {
-    setCurrentReference(references)
-    setReferenceModalVisible(true)
-  }
-
   return (
     <>
       <div className="knowledge-data-page">
@@ -586,20 +574,11 @@ const KnowledgeData: React.FC<Props> = () => {
                             </div>
                           </div>
                           <div className="chat-bubble answer">
-                            <div
-                              className="markdown-body"
-                              id={message.id}
-                              dangerouslySetInnerHTML={{
-                                __html: renderMarkdown(message.content || '')
-                              }}
-                            />
+                            <div className="markdown-body" id={message.id}>
+                              <ReferenceText text={message.content || ''} references={message.reference || []} />
+                            </div>
                             <div className="interact">
                               <div className="interact-operate">
-                                {message.reference && message.reference.length > 0 && (
-                                  <Tooltip title={'查看引用信息'} placement="top">
-                                    <i className="shim cursor-pointer iconfont icon-chakan" onClick={() => showReferenceModal(message.reference || [])}></i>
-                                  </Tooltip>
-                                )}
                                 <Tooltip title={'点击可复制'} placement="top">
                                   <i className="shim">
                                     <div className="copy" onClick={() => handleCopyClick(message.content || '')} />
@@ -742,32 +721,6 @@ const KnowledgeData: React.FC<Props> = () => {
         cancelText="取消"
       >
         <p>确定要删除这个会话吗？此操作不可恢复。</p>
-      </Modal>
-
-      {/* 引用信息弹窗 */}
-      <Modal title="引用信息" open={referenceModalVisible} onCancel={() => setReferenceModalVisible(false)} footer={null} width={700}>
-        <div className="max-h-[60vh] overflow-y-auto">
-          {currentReference.map((ref, index) => (
-            <div key={ref.id} className="mb-4 p-4 bg-gray-50 rounded-lg">
-              <div className="flex items-center justify-between mb-2">
-                <div className="font-bold text-base">📄 {ref.document_name}</div>
-              </div>
-              <div className="grid grid-cols-3 gap-2 mb-3 text-sm text-gray-500">
-                <div className="flex flex-col">
-                  <span className="font-medium">综合相似度 {(ref.similarity * 100).toFixed(1)}%</span>
-                </div>
-                <div className="flex flex-col">
-                  <span className="font-medium">术语相似度 {(ref.term_similarity * 100).toFixed(1)}%</span>
-                </div>
-                <div className="flex flex-col">
-                  <span className="font-medium">向量相似度 {(ref.vector_similarity * 100).toFixed(1)}%</span>
-                </div>
-              </div>
-              <div className="text-sm text-gray-700 whitespace-pre-wrap border-t border-gray-200 pt-3">{ref.content}</div>
-              {index < currentReference.length - 1 && <div className="border-b border-gray-200 my-4"></div>}
-            </div>
-          ))}
-        </div>
       </Modal>
     </>
   )
