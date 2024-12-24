@@ -20,3 +20,12 @@
 .reference-popover a:hover {
   text-decoration: underline;
 }
+.reference-text {
+  a {
+    color:#1890ff;
+    &:hover {
+      opacity: .65;
+    }
+  }
+
+}

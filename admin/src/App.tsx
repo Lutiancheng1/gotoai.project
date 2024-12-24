@@ -13,12 +13,14 @@ import Applications from '@/pages/Applications'
 import Dashboard from '@/pages/Dashboard'
 import AutoLogin from '@/pages/AutoLogin'
 import AutoLoginGenerator from '@/pages/AutoLoginGenerator'
+import CustomerService from '@/pages/Settings/CustomerService'
 
 // 导入axios配置
 import '@/utils/axios'
+import { isInIframe } from './utils/libs'
 
 function App() {
-  const isDevelopment = import.meta.env.MODE === 'development'
+  const notInIframe = !isInIframe()
 
   return (
     <Provider store={store}>
@@ -36,13 +38,14 @@ function App() {
               }
             >
               {/* 根路径重定向 */}
-              <Route index element={isDevelopment ? <Dashboard /> : <Navigate to="/admin/users" replace />} />
+              <Route index element={notInIframe ? <Dashboard /> : <Navigate to="/admin/users" replace />} />
               <Route path="users" element={<Users />} />
               <Route path="departments" element={<Departments />} />
               <Route path="applications" element={<Applications />} />
               <Route path="profile" element={<Profile />} />
               <Route path="settings">
                 <Route path="auto-login-generator" element={<AutoLoginGenerator />} />
+                <Route path="customer-service" element={<CustomerService />} />
               </Route>
             </Route>
             <Route path="*" element={<Navigate to="/admin/" replace />} />

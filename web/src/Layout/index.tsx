@@ -1,4 +1,4 @@
-import { ConfigProvider, Menu, MenuProps, Popover, Tooltip, Layout, Modal } from 'antd'
+import { ConfigProvider, Menu, MenuProps, Popover, Tooltip, Layout, Modal, FloatButton } from 'antd'
 import { Route, Routes, useLocation } from 'react-router-dom'
 import Sider from 'antd/es/layout/Sider'
 import React, { Suspense, useEffect, useState } from 'react'
@@ -15,6 +15,7 @@ import { useMount } from 'ahooks'
 import { fetchUserInfo, logout } from '@/store/slice/authSlice'
 import KnowledgeData from '@/pages/KnowledgeData'
 import { MenuItemType } from 'antd/es/menu/hooks/useItems'
+import Robot from '@/pages/Robot'
 
 // 导入子路由
 const NotFound = React.lazy(() => import('@/pages/NotFound'))
@@ -30,6 +31,8 @@ const Index = ({}: Props) => {
   const dispatch = useAppDispatch()
   const siteConfig = window.__SITE_CONFIG__
   const { user, loading } = useAppSelector((state) => state.auth)
+  // 聊天机器人是否折叠展开
+  const [isRobotCollapsed, setIsRobotCollapsed] = useState(false)
 
   // 通过 siteConfig 的disabledMenus 数组 控制隐藏的菜单
   const categoryItems: MenuItemType[] = menuConfig.map((item) => {
@@ -217,6 +220,27 @@ const Index = ({}: Props) => {
               </Routes>
             </Suspense>
           </div>
+          {/* 客服机器人 */}
+          <FloatButton
+            type="primary"
+            style={{
+              bottom: 160,
+              width: 50,
+              height: 50,
+              zIndex: 2
+            }}
+            icon={<i className="iconfont icon-kefu"></i>}
+            tooltip={<span>GotoAI 智能客服</span>}
+            onClick={() => {
+              setIsRobotCollapsed(!isRobotCollapsed)
+            }}
+          />
+          <Robot
+            style={{
+              display: isRobotCollapsed ? '' : 'none'
+            }}
+            onClose={() => setIsRobotCollapsed(false)}
+          />
         </div>
       </Layout>
       <div className="absolute bottom-0 h-[10px] w-full z-[999]" style={{ backgroundColor: 'rgba(31, 135, 232, 1)' }}></div>

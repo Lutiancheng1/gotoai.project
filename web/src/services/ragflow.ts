@@ -104,3 +104,30 @@ export const configureRagflowToken = (token: string) => {
 };
 
 export default ragflowAxios;
+
+/**
+ * 使用fetch方法创建会话
+ * @param apiKey - API Key
+ * @param token - Token
+ * @param params - 创建会话参数
+ */
+export const createSessionWithFetch = async (
+  apiKey: string,
+  token: string,
+  params: CreateSessionParams
+): Promise<SessionResponse> => {
+  const response = await fetch(`${baseUrl}/api/v1/chats/${apiKey}/sessions`, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(params)
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to create session');
+  }
+
+  return response.json();
+};

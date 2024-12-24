@@ -4,7 +4,6 @@ import { Popover, Modal } from 'antd'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
 import { renderMarkdown } from '@/components/MdRender/markdownRenderer'
 import type { Reference } from '@/types/ragflow'
-import FilePreview from '@/components/FilePreview'
 import './styles.css'
 import { baseUrl } from '@/services/ragflow'
 
@@ -36,7 +35,7 @@ const ReferenceText: React.FC<ReferenceTextProps> = ({ text, references }) => {
       <div className="flex gap-2 max-w-md">
         {reference.image_id && (
           <div className="w-20 h-20 flex-shrink-0">
-            <a href={`${baseUrl}/v1/document/get/${reference.document_id}`} target="_blank" rel="noopener noreferrer">
+            <a href={`${baseUrl}/v1/document/image/${reference.image_id}`} target="_blank" rel="noopener noreferrer">
               <img src={`${baseUrl}/v1/document/image/${reference.image_id}`} alt="Reference" className="w-full h-full object-cover rounded cursor-pointer" />
             </a>
           </div>
@@ -52,7 +51,7 @@ const ReferenceText: React.FC<ReferenceTextProps> = ({ text, references }) => {
     )
 
     return (
-      <Popover content={content} title={name} trigger="hover" placement="top" overlayClassName="reference-popover">
+      <Popover content={<div style={{ maxHeight: '400px', overflow: 'auto', padding: '4px 0' }}>{content}</div>} title={name} trigger="hover" overlayClassName="reference-popover shadow-lg">
         <ExclamationCircleOutlined
           className="text-blue-500 cursor-pointer mx-1"
           style={{

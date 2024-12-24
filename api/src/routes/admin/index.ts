@@ -5,6 +5,7 @@ import { validate, validationRules } from '@/middlewares/validation';
 import * as userController from '@/controllers/admin/user.controller';
 import * as departmentController from '@/controllers/admin/department.controller';
 import * as applicationController from '@/controllers/admin/application.controller';
+import * as configController from '@/controllers/admin/config.controller';
 
 const router = Router();
 
@@ -952,5 +953,103 @@ router.put('/applications/:id', validate(validationRules.application.updateAppli
  *         $ref: '#/components/responses/NotFound'
  */
 router.delete('/applications/:id', applicationController.deleteApplication);
+
+/**
+ * @swagger
+ * tags:
+ *   name: Config
+ *   description: 系统配置相关接口
+ */
+
+/**
+ * @swagger
+ * /api/admin/config/customer-service:
+ *   get:
+ *     summary: 获取客服配置
+ *     tags: [Config]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: 获取成功
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: success
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     config:
+ *                       type: object
+ *                       properties:
+ *                         greeting:
+ *                           type: string
+ *                           example: 您好，我是您的智能助手，请问有什么可以帮您？
+ *                         apiKey:
+ *                           type: string
+ *                           example: 1234567890
+ *                         apiSecret:
+ *                           type: string
+ *                           example: 0987654321
+ *       401: 
+ *         $ref: '#/components/responses/Unauthorized'
+ *       403:
+ *         $ref: '#/components/responses/Forbidden'
+ */
+router.get('/config/customer-service', configController.getCustomerServiceConfig);  
+
+/**
+ * @swagger
+ * /api/admin/config/customer-service:
+ *   put:
+ *     summary: 更新客服配置
+ *     tags: [Config]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               greeting:
+ *                 type: string
+ *                 description: 欢迎语
+ *               apiKey:
+ *                 type: string
+ *                 description: API密钥 
+ *               apiSecret:
+ *                 type: string
+ *                 description: API密钥
+ *     responses:
+ *       200:
+ *         description: 更新成功
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: success
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     message:
+ *                       type: string
+ *                       example: Config updated successfully
+ *       400:
+ *         $ref: '#/components/responses/BadRequest'
+ *       401:
+ *         $ref: '#/components/responses/Unauthorized'
+ *       403:
+ *         $ref: '#/components/responses/Forbidden' 
+ */
+router.put('/config/customer-service', configController.updateCustomerServiceConfig);
 
 export default router; 
