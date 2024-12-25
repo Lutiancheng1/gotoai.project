@@ -1,7 +1,8 @@
 .reference-popover {
   /* 自定义弹窗样式 */
 }
-
+.preview-container {
+}
 .reference-popover .ant-popover-title {
   text-align: center;
   padding: 8px 16px;
@@ -20,12 +21,12 @@
 .reference-popover a:hover {
   text-decoration: underline;
 }
+
 .reference-text {
   a {
-    color:#1890ff;
+    color: #1890ff;
     &:hover {
-      opacity: .65;
+      opacity: 0.65;
     }
   }
-
 }

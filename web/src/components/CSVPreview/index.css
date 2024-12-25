@@ -1,0 +1,125 @@
+.csv-preview-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+}
+
+.csv-preview-container .loading-mask {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+}
+
+.csv-preview-container .error-message {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: #ff4d4f;
+}
+
+.csv-preview-container .csv-content {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+}
+
+/* 表格样式优化 */
+.csv-preview-container .ant-table-wrapper {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.csv-preview-container .ant-table {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.csv-preview-container .ant-table-container {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #f0f0f0;
+  border-radius: 2px;
+}
+
+.csv-preview-container .ant-table-header {
+  background: #fff;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.csv-preview-container .ant-table-body {
+  flex: 1;
+  overflow: auto !important;
+  margin: 0 !important;
+}
+
+.csv-preview-container .ant-table-thead > tr > th {
+  background: #fafafa;
+  font-weight: 600;
+  padding: 8px;
+  white-space: nowrap;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.csv-preview-container .ant-table-tbody > tr > td {
+  padding: 8px;
+  white-space: nowrap;
+}
+
+/* 分页器样式 */
+.csv-preview-container .ant-pagination {
+  margin: 16px 0 0;
+  padding: 8px 0;
+  background: #fff;
+  border-top: 1px solid #f0f0f0;
+  text-align: center;
+}
+
+/* 自定义滚动条样式 */
+.csv-preview-container *::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.csv-preview-container *::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+}
+
+.csv-preview-container *::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.csv-preview-container *::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* 表格单元格样式 */
+.csv-preview-container .ant-table-cell {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 表格悬停效果 */
+.csv-preview-container .ant-table-tbody > tr:hover > td {
+  background: #f5f5f5;
+}
