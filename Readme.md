@@ -135,21 +135,21 @@ npm run docker:prod:clean  # 清理并重启
 ## 项目结构
 
 ```
-api/
-├── src/                # 源代码目录
-│   ├── config/        # 配置文件
-│   ├── controllers/   # 控制器
-│   ├── middlewares/   # 中间件
-│   ├── models/        # 数据模型
-│   ├── routes/        # 路由定义
-│   ├── services/      # 业务逻辑
-│   ├── types/         # 类型定义
-│   └── utils/         # 工具函数
-├── docker/            # Docker 配置
-│   ├── docker-compose.dev.yml   # 开发环境
-│   └── docker-compose.prod.yml  # 生产环境
-├── scripts/           # 脚本文件
-└── .env.example       # 环境变量模板
+project/
+├── api/              # 后端服务
+│   ├── src/          # 源代码
+│   ├── docker/       # Docker配置
+│   └── scripts/      # 部署脚本
+├── web/              # 前端用户界面
+│   ├── src/          # 源代码
+│   │   ├── components/   # 通用组件
+│   │   ├── pages/       # 页面组件
+│   │   ├── services/    # API服务
+│   │   └── utils/       # 工具函数
+│   └── public/      # 静态资源
+└── admin/           # 后台管理系统
+    ├── src/         # 源代码
+    └── public/      # 静态资源
 ```
 
 ## 开发规范
@@ -159,6 +159,16 @@ api/
 - 组件文档：Storybook
 - API 文档：Swagger
 - 区分本地开发环境和部署生产环境
+
+### 提交规范
+
+- feat: 新功能
+- fix: 修复 bug
+- docs: 文档更新
+- style: 代码格式调整
+- refactor: 重构
+- test: 测试相关
+- chore: 构建/工具链相关
 
 ## 部署架构
 
