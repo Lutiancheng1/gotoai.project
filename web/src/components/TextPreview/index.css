@@ -1,0 +1,81 @@
+.text-preview-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+}
+
+.text-preview-container .loading-mask {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+}
+
+.text-preview-container .error-message {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: #ff4d4f;
+}
+
+.text-preview-container .text-content-wrapper {
+  flex: 1;
+  overflow: auto;
+  padding: 16px;
+}
+
+.text-preview-container .text-content {
+  margin: 0;
+  padding: 16px;
+  background: #f8f9fa;
+  border-radius: 4px;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+  font-size: 14px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+/* Markdown 样式 */
+.text-preview-container .markdown-body {
+  padding: 16px;
+  background: #fff;
+  border-radius: 4px;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+/* 自定义滚动条样式 */
+.text-preview-container *::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.text-preview-container *::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+}
+
+.text-preview-container *::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.text-preview-container *::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* 适配 Modal 中的展示 */
+.modal-text-preview {
+  height: 100%;
+}

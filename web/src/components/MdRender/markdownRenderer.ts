@@ -62,13 +62,25 @@ md.renderer.rules.fence = (tokens, idx) => {
   const uniqueId = `copy-button-${Date.now()}-${Math.random()}`
 
   if (includeCopyButtonGlobal) {
-    // 根据全局变量条件性地添加复制按钮
+    // 使用 MutationObserver 来监听 DOM 变化
     setTimeout(() => {
-      const copybutton = document.getElementById(uniqueId)
-      if (copybutton) {
-        copybutton.addEventListener('click', () => handleCopyClick(token.content))
-      }
-    })
+      const observer = new MutationObserver((mutations, obs) => {
+        const copybutton = document.getElementById(uniqueId)
+        if (copybutton) {
+          copybutton.addEventListener('click', () => handleCopyClick(token.content))
+          obs.disconnect() // 找到按钮后停止观察
+        }
+      })
+
+      // 开始观察 document.body 的子树变化
+      observer.observe(document.body, {
+        childList: true,
+        subtree: true
+      })
+
+      // 5秒后如果还没找到按钮，停止观察
+      setTimeout(() => observer.disconnect(), 5000)
+    }, 0)
   }
   const finallyText = includeCopyButtonGlobal
     ? `

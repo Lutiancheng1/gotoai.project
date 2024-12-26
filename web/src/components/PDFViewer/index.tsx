@@ -12,6 +12,8 @@ import 'pdfjs-dist/web/pdf_viewer.css'
 import './index.css'
 import Toast from '../Toast'
 pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.3.136/pdf.worker.min.mjs'
+// 添加 CDN 基础路径
+const PDFJS_CDN_BASE = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.3.136'
 
 interface PDFViewerProps {
   url: string
@@ -131,7 +133,9 @@ const PDFViewer: React.FC<PDFViewerProps> = ({ url, handleMouseUp, hasTools = fa
         loadingTask.current = pdfjsLib.getDocument({
           url,
           rangeChunkSize, // 可以根据需要调整
-          disableFontFace: true,
+          disableFontFace: false,
+          standardFontDataUrl: `${PDFJS_CDN_BASE}/standard_fonts/`,
+          cMapUrl: `${PDFJS_CDN_BASE}/cmaps/`,
           withCredentials: false // 默认不发送凭证
         })
 

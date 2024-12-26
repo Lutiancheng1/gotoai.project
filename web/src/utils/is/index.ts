@@ -92,6 +92,22 @@ export function isHtmlFile(fileName: string): boolean {
   return /\.(htm|html)$/i.test(fileName)
 }
 
+export function isMdFile(fileName: string): boolean {
+  return /\.(md|markdown)$/i.test(fileName)
+}
+
+export function isJsonFile(fileName: string): boolean {
+  return /\.json$/i.test(fileName)
+}
+
+export function isEmlFile(fileName: string): boolean {
+  return /\.eml$/i.test(fileName)
+}
+
+export function isTextFile(fileName: string): boolean {
+  return /\.(txt|md|markdown|json|eml|html|htm)$/i.test(fileName)
+}
+
 const shortTypeToMimeType: { [key: string]: string[] } = {
   image: ['jpeg', 'jpg', 'png', 'gif'],
   word: ['doc', 'docx'],
@@ -100,9 +116,9 @@ const shortTypeToMimeType: { [key: string]: string[] } = {
   csv: ['csv'],
   video: ['mp4', 'avi', 'mkv', 'mov', 'wmv'],
   audio: ['mp3', 'wav', 'flac', 'aac'],
-  text: ['txt'],
+  text: ['txt', 'md', 'markdown', 'json', 'eml'],
   zip: ['zip', 'rar', '7z'],
-  html: ['html', 'htm'] // 添加HTML文件类型
+  html: ['html', 'htm']
 }
 
 // 判断是否为图片文件

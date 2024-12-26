@@ -6,11 +6,12 @@ import { renderMarkdown } from '@/components/MdRender/markdownRenderer'
 import type { Reference } from '@/types/ragflow'
 import './styles.css'
 import { baseUrl } from '@/services/ragflow'
-import { isCsvFile, isDocxFile, isExcelFile, isPdfFile } from '@/utils/is'
+import { isCsvFile, isDocxFile, isExcelFile, isPdfFile, isPptFile, isTextFile } from '@/utils/is'
 import PdfViewer from '@/components/PDFViewer'
 import WordPreview from '../WordPreview'
 import ExcelPreview from '../ExcelPreview'
 import CsvPreview from '../CSVPreview'
+import TextPreview from '../TextPreview'
 
 interface ReferenceTextProps {
   text: string
@@ -25,7 +26,7 @@ const PREVIEW_CONFIGS = [
     component: ({ url }: { url: string }) => <PdfViewer url={url} hasTools={true} />
   },
   {
-    type: 'docx',
+    type: 'word',
     check: isDocxFile,
     component: ({ url }: { url: string }) => <WordPreview url={url} hasTools={true} />
   },
@@ -38,6 +39,11 @@ const PREVIEW_CONFIGS = [
     type: 'csv',
     check: isCsvFile,
     component: ({ url }: { url: string }) => <CsvPreview url={url} />
+  },
+  {
+    type: 'text',
+    check: isTextFile,
+    component: ({ url, fileType }: { url: string; fileType?: string }) => <TextPreview url={url} fileType={fileType} />
   }
 ] as const
 
@@ -185,7 +191,8 @@ const ReferenceText: React.FC<ReferenceTextProps> = ({ text, references }) => {
           title={currentReference?.document_name}
         >
           {PREVIEW_CONFIGS.find((config) => config.check(currentReference.document_name))?.component({
-            url: `${baseUrl}/v1/document/get/${currentReference.document_id}`
+            url: `${baseUrl}/v1/document/get/${currentReference.document_id}`,
+            fileType: currentReference.document_name.split('.').pop()
           }) ?? (
             <div className="flex flex-col items-center justify-center h-full">
               <div className="text-4xl mb-4">🚫</div>
