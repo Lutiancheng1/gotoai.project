@@ -6,7 +6,7 @@ import { renderMarkdown } from '@/components/MdRender/markdownRenderer'
 import type { Reference } from '@/types/ragflow'
 import './styles.css'
 import { baseUrl } from '@/services/ragflow'
-import { isCsvFile, isDocxFile, isExcelFile, isPdfFile, isPptFile, isTextFile } from '@/utils/is'
+import { isCsvFile, isDocxFile, isExcelFile, isPdfFile, isTextFile } from '@/utils/is'
 import PdfViewer from '@/components/PDFViewer'
 import WordPreview from '../WordPreview'
 import ExcelPreview from '../ExcelPreview'
@@ -17,18 +17,51 @@ interface ReferenceTextProps {
   text: string
   references: Reference[]
 }
-//需支持的文件格式为DOCX、DOC、EXCEL、PPT、PPTX、IMAGE、PDF、CSV、TXT、MD、JSON、EML、HTML
+
+// 检查内容是否包含 HTML 表格
+const hasHtmlTable = (content: string) => {
+  return content.includes('<table') && content.includes('</table>')
+}
+
+// 处理可能包含表格的混合内容
+const processContent = (content: string) => {
+  // 如果不包含表格，直接返回原文本
+  if (!hasHtmlTable(content)) {
+    return <div className="flex-1">{content}</div>
+  }
+
+  // 使用正则表达式匹配表格和非表格内容
+  const parts = content.split(/(<table[\s\S]*?<\/table>)/)
+
+  return (
+    <div className="flex-1">
+      {parts.map((part, index) => {
+        if (part.trim().startsWith('<table')) {
+          return <div key={index} className="reference-table-wrapper markdown-body" dangerouslySetInnerHTML={{ __html: part }} />
+        }
+        // 非表格内容
+        return part ? (
+          <div key={index} className="mb-2">
+            {part}
+          </div>
+        ) : null
+      })}
+    </div>
+  )
+}
+
+// 需支持的文件格式为DOCX、DOC、EXCEL、PPT、PPTX、IMAGE、PDF、CSV、TXT、MD、JSON、EML、HTML
 // 目前 支持的预览类型配置
 const PREVIEW_CONFIGS = [
   {
     type: 'pdf',
     check: isPdfFile,
-    component: ({ url }: { url: string }) => <PdfViewer url={url} hasTools={true} />
+    component: ({ url }: { url: string }) => <PdfViewer url={url} />
   },
   {
     type: 'word',
     check: isDocxFile,
-    component: ({ url }: { url: string }) => <WordPreview url={url} hasTools={true} />
+    component: ({ url }: { url: string }) => <WordPreview url={url} />
   },
   {
     type: 'excel',
@@ -52,6 +85,7 @@ const ReferenceText: React.FC<ReferenceTextProps> = ({ text, references }) => {
   const rootsRef = useRef<Map<string, ReturnType<typeof createRoot>>>(new Map())
   const [open, setOpen] = useState(false)
   const [currentReference, setCurrentReference] = useState<Reference | null>(null)
+
   // 在markdown渲染之前替换引用标记
   const processText = () => {
     let processedText = text
@@ -62,13 +96,19 @@ const ReferenceText: React.FC<ReferenceTextProps> = ({ text, references }) => {
     })
     return processedText
   }
+
+  // 渲染引用内容
+  const renderReferenceContent = (reference: Reference) => {
+    return processContent(reference.content)
+  }
+
   // 创建引用图标
   const createReferenceIcon = (index: number) => {
     const reference = references[index]
     if (!reference) return null
 
     const content = (
-      <div className="flex gap-2 max-w-md">
+      <div className="flex gap-2 reference-content">
         {reference.image_id && (
           <>
             {/* 左侧大图预览 */}
@@ -89,7 +129,7 @@ const ReferenceText: React.FC<ReferenceTextProps> = ({ text, references }) => {
             </Popover>
           </>
         )}
-        <div className="flex-1">{reference.content}</div>
+        {renderReferenceContent(reference)}
       </div>
     )
     const name = (
@@ -106,7 +146,7 @@ const ReferenceText: React.FC<ReferenceTextProps> = ({ text, references }) => {
     )
 
     return (
-      <Popover content={<div style={{ maxHeight: '400px', overflow: 'auto', padding: '4px 0' }}>{content}</div>} title={name} trigger="hover" overlayClassName="reference-popover shadow-lg markdown-body ">
+      <Popover content={<div className="reference-content-wrapper">{content}</div>} title={name} trigger="hover" overlayClassName="reference-popover shadow-lg markdown-body" overlayStyle={{ maxWidth: 'none' }}>
         <ExclamationCircleOutlined
           className="text-blue-500 cursor-pointer mx-1"
           style={{

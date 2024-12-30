@@ -38,7 +38,7 @@ const linkService = new pdfjsViewer.PDFLinkService({
  * @property {number} [initialScale=0.8] - 初始缩放比例，默认为 0.8
  * @property {number} [rangeChunkSize=65536 * 80] - PDF 文件加载时的分块大小，用于控制加载性能
  */
-const PDFViewer: React.FC<PDFViewerProps> = ({ url, handleMouseUp, hasTools = false, targetViewContainer, rangeChunkSize = 65536 * 80, initialScale = 0.8 }) => {
+const PDFViewer: React.FC<PDFViewerProps> = ({ url, handleMouseUp, hasTools = true, targetViewContainer, rangeChunkSize = 65536 * 80, initialScale = 0.8 }) => {
   const [numPages, setNumPages] = useState<number>(1)
   // 当前页面
   const [pageNumber, setPageNumber] = useState(1)

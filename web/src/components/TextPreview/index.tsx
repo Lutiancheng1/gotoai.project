@@ -7,11 +7,16 @@ import './index.css'
 import { isHtmlFile, isJsonFile, isMdFile } from '@/utils/is'
 
 interface TextPreviewProps {
+  /** 文本文件的 URL 地址 */
   url: string
+  /** 额外的 CSS 类名 */
   className?: string
+  /** 内联样式 */
   style?: React.CSSProperties
+  /** 容器高度，支持数字（px）或字符串值 */
   height?: number | string
-  fileType?: string // 可选的文件类型参数
+  /** 可选的文件类型，支持 'markdown' | 'json' | 'html' | 'text' */
+  fileType?: string
 }
 
 type TextHandler = (text: string) => string
@@ -31,6 +36,15 @@ const MIME_TYPE_HANDLERS: Record<string, TextHandler> = {
   'text/plain': (text: string) => text
 } as const
 
+/**
+ * TextPreview 组件的属性定义
+ * @interface TextPreviewProps
+ * @property {string} url - 文本文件的 URL 地址
+ * @property {string} [className] - 额外的 CSS 类名
+ * @property {React.CSSProperties} [style] - 内联样式
+ * @property {number | string} [height] - 容器高度
+ * @property {string} [fileType] - 可选的文件类型，支持 'markdown' | 'json' | 'html' | 'text'
+ */
 const TextPreview: React.FC<TextPreviewProps> = ({ url, className = '', style = {}, height = '100%', fileType }) => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -91,7 +105,7 @@ const TextPreview: React.FC<TextPreviewProps> = ({ url, className = '', style = 
       } catch (error) {
         console.error('Error loading text:', error)
         setLoading(false)
-        setError('文件加载失败')
+        setError('文��加载失败')
         Toast.notify({ type: 'error', message: '文件加载失败' })
       }
     }

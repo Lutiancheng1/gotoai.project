@@ -1,3 +1,15 @@
+/**
+ * TextPreview 组件样式定义
+ * @cssModule TextPreview
+ * @property {class} text-preview-container - 最外层容器，负责整体布局
+ * @property {class} loading-mask - 加载状态遮罩层
+ * @property {class} error-message - 错误信息显示区域
+ * @property {class} text-content-wrapper - 内容包装容器
+ * @property {class} text-content - 纯文本内容样式
+ * @property {class} markdown-body - Markdown 渲染内容样式
+ * @property {class} modal-text-preview - Modal 中的预览容器样式
+ */
+
 .text-preview-container {
   position: relative;
   width: 100%;

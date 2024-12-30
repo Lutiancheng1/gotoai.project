@@ -1,7 +1,6 @@
 .reference-popover {
   /* 自定义弹窗样式 */
-}
-.preview-container {
+  max-width: none !important;
 }
 .reference-popover .ant-popover-title {
   text-align: center;
@@ -29,4 +28,132 @@
       opacity: 0.65;
     }
   }
+  line-height: 1.6;
+}
+
+.reference-icon-root {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.reference-popover {
+  max-width: 800px !important;
+}
+
+/* 表格样式 */
+.reference-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  margin: 8px 0;
+}
+
+.reference-table-wrapper table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0;
+  font-size: 14px;
+}
+
+.reference-table-wrapper table caption {
+  font-weight: bold;
+  padding: 8px;
+  text-align: center;
+  border: 1px solid #e8e8e8;
+  background-color: #fafafa;
+}
+
+.reference-table-wrapper th,
+.reference-table-wrapper td {
+  padding: 8px;
+  border: 1px solid #e8e8e8;
+  text-align: left;
+  min-width: 80px;
+}
+
+.reference-table-wrapper th {
+  background-color: #fafafa;
+  font-weight: 500;
+}
+
+.reference-table-wrapper tr:hover {
+  background-color: #fafafa;
+}
+
+/* 确保表格在弹出层中正确显示 */
+.reference-popover .ant-popover-inner-content {
+  padding: 0;
+}
+
+.reference-popover .reference-table-wrapper {
+  max-width: 100%;
+  margin: 0;
+}
+
+/* 适配暗色主题 */
+@media (prefers-color-scheme: dark) {
+  .reference-table-wrapper table caption,
+  .reference-table-wrapper th,
+  .reference-table-wrapper td {
+    border-color: #303030;
+  }
+
+  .reference-table-wrapper th {
+    background-color: #1f1f1f;
+  }
+
+  .reference-table-wrapper tr:hover {
+    background-color: #1f1f1f;
+  }
+}
+
+.reference-content-wrapper {
+  max-height: 400px;
+  overflow: auto;
+  padding: 4px 0;
+  min-width: 300px;  /* 最小宽度 */
+  max-width: 90vw;   /* 最大不超过视窗宽度的90% */
+}
+
+.reference-content {
+  display: flex;
+  gap: 0.5rem;
+  width: fit-content;
+  min-width: 100%;
+}
+
+/* 混合内容样式 */
+.reference-content .flex-1 > div {
+  margin-bottom: 8px;
+}
+
+.reference-content .flex-1 > div:last-child {
+  margin-bottom: 0;
+}
+
+/* 表格容器样式调整 */
+.reference-content .reference-table-wrapper {
+  width: auto;
+  min-width: 100%;
+  overflow-x: auto;
+  margin: 12px 0;
+}
+
+.reference-content .reference-table-wrapper:first-child {
+  margin-top: 0;
+}
+
+.reference-content .reference-table-wrapper:last-child {
+  margin-bottom: 0;
+}
+
+.reference-content .reference-table-wrapper table {
+  width: auto;
+  min-width: 100%;
+}
+
+/* 文本内容样式 */
+.reference-content .flex-1 > div:not(.reference-table-wrapper) {
+  white-space: pre-wrap;
+  word-break: break-word;
+  line-height: 1.6;
 }
